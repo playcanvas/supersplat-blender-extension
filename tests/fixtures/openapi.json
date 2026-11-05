@@ -1,0 +1,1735 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "SuperSplat API",
+        "version": "1.0.0"
+    },
+    "tags": [
+        {
+            "name": "Account"
+        },
+        {
+            "name": "Splats"
+        },
+        {
+            "name": "Uploads"
+        },
+        {
+            "name": "Downloads"
+        }
+    ],
+    "servers": [
+        {
+            "url": "https://playcanvas.com/api/supersplat"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/v1/me": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Get the authenticated caller",
+                "operationId": "getMe",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Me"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats": {
+            "get": {
+                "tags": [
+                    "Splats"
+                ],
+                "summary": "List splats owned by the authenticated caller",
+                "operationId": "listSplats",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "default": 50,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 128
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "schema": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 100000
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SplatList"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/{splatId}": {
+            "get": {
+                "tags": [
+                    "Splats"
+                ],
+                "summary": "Get a splat by id",
+                "operationId": "getSplat",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "splatId",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Splat"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/{splatId}/downloads": {
+            "post": {
+                "tags": [
+                    "Downloads"
+                ],
+                "summary": "Request a splat download",
+                "operationId": "createSplatDownload",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "splatId",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateDownloadRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "headers": {
+                            "Location": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Download"
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "headers": {
+                            "Location": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Download"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/{splatId}/downloads/{target}": {
+            "get": {
+                "tags": [
+                    "Downloads"
+                ],
+                "summary": "Get a splat download",
+                "operationId": "getSplatDownload",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "splatId",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "target",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ply",
+                                "sog",
+                                "ssog"
+                            ]
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Download"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/{splatId}/downloads/{target}/file": {
+            "post": {
+                "tags": [
+                    "Downloads"
+                ],
+                "summary": "Get the file of a splat download",
+                "operationId": "createSplatDownloadFile",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "splatId",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "target",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ply",
+                                "sog",
+                                "ssog"
+                            ]
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DownloadFile"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DownloadNotReadyError"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TooManyRequestsError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/uploads": {
+            "post": {
+                "tags": [
+                    "Uploads"
+                ],
+                "summary": "Create a resumable splat upload",
+                "operationId": "createSplatUpload",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Idempotency-Key",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUploadRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadSession"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadSession"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FileTooLargeError"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TooManyRequestsError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/uploads/{uploadId}": {
+            "get": {
+                "tags": [
+                    "Uploads"
+                ],
+                "summary": "Get a resumable upload session",
+                "operationId": "getSplatUpload",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uploadId",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadSession"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/uploads/{uploadId}/part-upload-urls": {
+            "post": {
+                "tags": [
+                    "Uploads"
+                ],
+                "summary": "Create signed URLs for upload parts",
+                "operationId": "createSplatUploadPartUrls",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uploadId",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUploadPartUrlsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadPartUrls"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/splats/uploads/{uploadId}/complete": {
+            "post": {
+                "tags": [
+                    "Uploads"
+                ],
+                "summary": "Complete a resumable upload and publish the splat",
+                "operationId": "completeSplatUpload",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "uploadId",
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CompleteUploadRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "headers": {
+                            "Location": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CompleteUploadResponse"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "headers": {
+                            "Location": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CompleteUploadResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "413": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FileTooLargeError"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TooManyRequestsError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateDownloadRequest": {
+                "type": "object",
+                "properties": {
+                    "target": {
+                        "type": "string",
+                        "enum": [
+                            "ply",
+                            "sog",
+                            "ssog"
+                        ]
+                    }
+                },
+                "required": [
+                    "target"
+                ],
+                "additionalProperties": false
+            },
+            "CreateUploadRequest": {
+                "type": "object",
+                "properties": {
+                    "contentLength": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 16106127360
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "sourceFormat": {
+                        "type": "string",
+                        "enum": [
+                            "ply",
+                            "sog",
+                            "spz",
+                            "gsaf",
+                            "ssog",
+                            "lcc"
+                        ]
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 5000
+                    },
+                    "uploadClient": {
+                        "$ref": "#/components/schemas/UploadClient"
+                    },
+                    "softwareTools": {
+                        "maxItems": 6,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 64,
+                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+                        },
+                        "uniqueItems": true
+                    }
+                },
+                "required": [
+                    "sourceFormat"
+                ],
+                "additionalProperties": false
+            },
+            "UploadClient": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64,
+                        "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+                    },
+                    "version": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                    }
+                },
+                "required": [
+                    "id"
+                ],
+                "additionalProperties": false
+            },
+            "CreateUploadPartUrlsRequest": {
+                "type": "object",
+                "properties": {
+                    "parts": {
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                        }
+                    }
+                },
+                "required": [
+                    "parts"
+                ],
+                "additionalProperties": false
+            },
+            "CompleteUploadRequest": {
+                "type": "object",
+                "properties": {
+                    "parts": {
+                        "minItems": 1,
+                        "maxItems": 10000,
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "partNumber": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 10000
+                                },
+                                "etag": {
+                                    "type": "string",
+                                    "minLength": 1
+                                }
+                            },
+                            "required": [
+                                "partNumber",
+                                "etag"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "required": [
+                    "parts"
+                ],
+                "additionalProperties": false
+            },
+            "Me": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "id"
+                ],
+                "additionalProperties": {}
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "error"
+                ],
+                "additionalProperties": {}
+            },
+            "SplatList": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Splat"
+                        }
+                    },
+                    "pagination": {
+                        "type": "object",
+                        "properties": {
+                            "skip": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 100000
+                            },
+                            "limit": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 128
+                            },
+                            "total": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 100000000
+                            }
+                        },
+                        "required": [
+                            "skip",
+                            "limit",
+                            "total"
+                        ],
+                        "additionalProperties": {}
+                    }
+                },
+                "required": [
+                    "data",
+                    "pagination"
+                ],
+                "additionalProperties": {}
+            },
+            "Splat": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "processing",
+                            "completed",
+                            "failed"
+                        ]
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "enum": [
+                            "listed",
+                            "unlisted"
+                        ]
+                    },
+                    "format": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "size": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 16106127360
+                    },
+                    "viewerUrl": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time",
+                                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "updatedAt": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time",
+                                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "completedAt": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time",
+                                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/SplatAuthor"
+                    },
+                    "thumbnails": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/SplatThumbnails"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "downloadable": {
+                        "type": "boolean"
+                    },
+                    "license": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "content": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/SplatContent"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "id",
+                    "title",
+                    "description",
+                    "status",
+                    "visibility",
+                    "format",
+                    "size",
+                    "viewerUrl",
+                    "createdAt",
+                    "updatedAt",
+                    "completedAt",
+                    "author",
+                    "thumbnails",
+                    "downloadable",
+                    "license",
+                    "content"
+                ],
+                "additionalProperties": {}
+            },
+            "SplatAuthor": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "username",
+                    "displayName"
+                ],
+                "additionalProperties": {}
+            },
+            "SplatThumbnails": {
+                "type": "object",
+                "properties": {
+                    "s": {
+                        "type": "string"
+                    },
+                    "m": {
+                        "type": "string"
+                    },
+                    "l": {
+                        "type": "string"
+                    },
+                    "xl": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "s",
+                    "m",
+                    "l",
+                    "xl"
+                ],
+                "additionalProperties": {}
+            },
+            "SplatContent": {
+                "type": "object",
+                "properties": {
+                    "format": {
+                        "type": "string",
+                        "enum": [
+                            "sog",
+                            "ssog",
+                            "compressed-ply"
+                        ]
+                    },
+                    "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000
+                    },
+                    "splatCount": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967296
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "lodCounts": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967296
+                        }
+                    }
+                },
+                "required": [
+                    "format",
+                    "version",
+                    "splatCount"
+                ],
+                "additionalProperties": {}
+            },
+            "Download": {
+                "type": "object",
+                "properties": {
+                    "splatId": {
+                        "type": "string"
+                    },
+                    "target": {
+                        "type": "string",
+                        "enum": [
+                            "ply",
+                            "sog",
+                            "ssog"
+                        ]
+                    },
+                    "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "queued",
+                            "processing",
+                            "ready",
+                            "failed"
+                        ]
+                    },
+                    "bytes": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1099511627776
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "splatId",
+                    "target",
+                    "version",
+                    "status",
+                    "bytes"
+                ],
+                "additionalProperties": {}
+            },
+            "DownloadFile": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    },
+                    "urlExpiresAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "bytes": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1099511627776
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1000000
+                    }
+                },
+                "required": [
+                    "url",
+                    "urlExpiresAt",
+                    "bytes",
+                    "version"
+                ],
+                "additionalProperties": {}
+            },
+            "DownloadNotReadyError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string",
+                        "const": "not_ready"
+                    }
+                },
+                "required": [
+                    "error",
+                    "code"
+                ],
+                "additionalProperties": {}
+            },
+            "TooManyRequestsError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string",
+                        "enum": [
+                            "daily_publish_limit_reached",
+                            "too_many_processing",
+                            "publish_in_progress",
+                            "daily_download_limit_reached"
+                        ]
+                    },
+                    "limitBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1099511627776
+                    },
+                    "usedBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1099511627776
+                    },
+                    "resetsAt": {
+                        "type": "string"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 10000
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 10000
+                    },
+                    "uploading": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 10000
+                    }
+                },
+                "required": [
+                    "error"
+                ],
+                "additionalProperties": {}
+            },
+            "UploadSession": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "created",
+                            "uploading",
+                            "processing",
+                            "completed",
+                            "canceled"
+                        ]
+                    },
+                    "contentLength": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 16106127360
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "sourceFormat": {
+                        "type": "string",
+                        "enum": [
+                            "ply",
+                            "sog",
+                            "spz",
+                            "gsaf",
+                            "ssog",
+                            "lcc"
+                        ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "softwareTools": {
+                        "maxItems": 6,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 64,
+                            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+                        },
+                        "uniqueItems": true
+                    },
+                    "partSize": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 16106127360
+                    },
+                    "uploadedParts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "partNumber": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 10000
+                                },
+                                "etag": {
+                                    "type": "string"
+                                },
+                                "size": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 16106127360
+                                }
+                            },
+                            "required": [
+                                "partNumber",
+                                "etag"
+                            ],
+                            "additionalProperties": {}
+                        }
+                    },
+                    "expiresAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    }
+                },
+                "required": [
+                    "id",
+                    "status",
+                    "contentLength",
+                    "sourceFormat",
+                    "title",
+                    "description",
+                    "partSize",
+                    "uploadedParts",
+                    "expiresAt"
+                ],
+                "additionalProperties": {}
+            },
+            "FileTooLargeError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string",
+                        "const": "file_too_large"
+                    },
+                    "limitBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 16106127360
+                    },
+                    "fileBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1099511627776
+                    }
+                },
+                "required": [
+                    "error",
+                    "code",
+                    "limitBytes",
+                    "fileBytes"
+                ],
+                "additionalProperties": {}
+            },
+            "UploadPartUrls": {
+                "type": "object",
+                "properties": {
+                    "uploadId": {
+                        "type": "string"
+                    },
+                    "partSize": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 16106127360
+                    },
+                    "urls": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "partNumber": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 10000
+                                },
+                                "url": {
+                                    "type": "string"
+                                },
+                                "expiresAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                }
+                            },
+                            "required": [
+                                "partNumber",
+                                "url",
+                                "expiresAt"
+                            ],
+                            "additionalProperties": {}
+                        }
+                    }
+                },
+                "required": [
+                    "uploadId",
+                    "partSize",
+                    "urls"
+                ],
+                "additionalProperties": {}
+            },
+            "CompleteUploadResponse": {
+                "type": "object",
+                "properties": {
+                    "uploadId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "const": "completed"
+                    },
+                    "splatId": {
+                        "type": "string"
+                    },
+                    "editUrl": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "uploadId",
+                    "status",
+                    "splatId",
+                    "editUrl"
+                ],
+                "additionalProperties": {}
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

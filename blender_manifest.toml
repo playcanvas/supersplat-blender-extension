@@ -1,0 +1,38 @@
+schema_version = "1.0.0"
+
+id = "supersplat"
+version = "0.1.0"
+name = "SuperSplat"
+tagline = "Import SuperSplat scenes and publish Gaussian splats"
+maintainer = "PlayCanvas"
+website = "https://github.com/playcanvas/supersplat-blender-extension"
+type = "add-on"
+
+tags = ["Import-Export"]
+
+blender_version_min = "5.3.0"
+
+license = ["SPDX:MIT"]
+copyright = ["2026 PlayCanvas Ltd."]
+
+[permissions]
+network = "Download scenes from and upload Gaussian splats to SuperSplat"
+files = "Store the API key and stage scene files for transfer"
+clipboard = "Copy the published scene link"
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  "*.pyc",
+  "/.git/",
+  "/.git",
+  "/.github/",
+  ".gitignore",
+  "/tests/",
+  "/scripts/",
+  "/dist/",
+  "/scratch/",
+  "/docs/",
+  "/CONTRIBUTING.md",
+  ".DS_Store",
+]

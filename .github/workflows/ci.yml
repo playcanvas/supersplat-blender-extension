@@ -1,0 +1,41 @@
+name: CI
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # Bump this one line to change Blender. Once 5.3 ships (Nov 10), use
+      # https://download.blender.org/release/Blender5.3/blender-5.3.0-linux-x64.tar.xz
+      BLENDER_URL: https://cdn.builder.blender.org/download/daily/archive/blender-5.3.0-beta+v53.ace25df17a10-linux.x86_64-release.tar.xz
+      BLENDER: /home/runner/blender/blender
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/cache@v4
+        id: blender
+        with:
+          path: /home/runner/blender
+          key: blender-${{ env.BLENDER_URL }}
+      - name: Download Blender
+        if: steps.blender.outputs.cache-hit != 'true'
+        run: mkdir -p ~/blender && curl -fsSL "$BLENDER_URL" | tar -xJ -C ~/blender --strip-components=1
+      - name: Install Blender's runtime libraries
+        run: sudo apt-get update -q && sudo apt-get install -yq libegl1 libgl1 libsm6 libxi6 libxkbcommon0 libxrender1 libxxf86vm1
+      - name: Validate manifest
+        run: '"$BLENDER" --factory-startup --command extension validate .'
+      - name: Build
+        run: scripts/build.sh
+      - name: Unit and Blender tests (Blender's Python)
+        run: scripts/test_blender.sh
+      - name: Unit tests (plain Python, no numpy)
+        run: python3 -m unittest discover -s tests
+      - name: Show Blender's crash log
+        if: failure()
+        run: cat /tmp/blender.crash.txt 2>/dev/null || true
